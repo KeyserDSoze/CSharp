@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 
 namespace CSharp.Library.History
@@ -12,16 +13,16 @@ namespace CSharp.Library.History
             if (already.IsAdded())
                 Console.WriteLine("Already implemented!!!");
         }
-        public static RGBColor FromRainbow(Rainbow colorBand) =>
+        public static Color FromRainbow(Rainbow colorBand) =>
     colorBand switch
         {
-            Rainbow.Red => new RGBColor(0xFF, 0x00, 0x00),
-            Rainbow.Orange => new RGBColor(0xFF, 0x7F, 0x00),
-            Rainbow.Yellow => new RGBColor(0xFF, 0xFF, 0x00),
-            Rainbow.Green => new RGBColor(0x00, 0xFF, 0x00),
-            Rainbow.Blue => new RGBColor(0x00, 0x00, 0xFF),
-            Rainbow.Indigo => new RGBColor(0x4B, 0x00, 0x82),
-            Rainbow.Violet => new RGBColor(0x94, 0x00, 0xD3),
+            Rainbow.Red => Color.FromArgb(0xFF, 0x00, 0x00),
+            Rainbow.Orange => Color.FromArgb(0xFF, 0x7F, 0x00),
+            Rainbow.Yellow => Color.FromArgb(0xFF, 0xFF, 0x00),
+            Rainbow.Green => Color.FromArgb(0x00, 0xFF, 0x00),
+            Rainbow.Blue => Color.FromArgb(0x00, 0x00, 0xFF),
+            Rainbow.Indigo => Color.FromArgb(0x4B, 0x00, 0x82),
+            Rainbow.Violet => Color.FromArgb(0x94, 0x00, 0xD3),
             _ => throw new ArgumentException(message: "invalid enum value", paramName: nameof(colorBand)),
         };
     }
@@ -33,10 +34,10 @@ namespace CSharp.Library.History
             if (IAlreadyImplemented.Mordor || IAlreadyImplemented.PublicCheck())
                 return;
         }
-        public override bool base(IAlreadyImplemented).IsAdded()
-        {
-            return false;
-        }
+        //public override bool base(IAlreadyImplemented).IsAdded()
+        //{
+        //    return false;
+        //}
     }
     public interface IAlreadyImplemented
     {
@@ -58,7 +59,7 @@ namespace CSharp.Library.History
             return Asgard;
         }
     }
-    public struct Point
+    public struct PointV8
     {
         public double X { get; set; }
         public double Y { get; set; }
