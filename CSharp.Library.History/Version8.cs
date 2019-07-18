@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
+using System.IO;
 
 namespace CSharp.Library.History
 {
@@ -12,6 +13,12 @@ namespace CSharp.Library.History
             IAlreadyImplemented already = new AlreadyImplemented();
             if (already.IsAdded())
                 Console.WriteLine("Already implemented!!!");
+            //It's closed when it's out of scope.
+            using StreamWriter streamWriter = new StreamWriter(new MemoryStream());
+            streamWriter.Write("Close this stream writer at the end of this method");
+            bool isWhite = false;
+            Console.WriteLine("It's not white: " + IsNotWhite(isWhite));
+            static bool IsNotWhite(bool isWhite) => !isWhite;
         }
         //Property Pattern
         public static double Multiply(PointV8 pointV8)
@@ -79,6 +86,26 @@ namespace CSharp.Library.History
                 ("scissors", "rock") => "scissors is broken by rock. Rock wins.",
                 ("scissors", "paper") => "scissors cuts paper. Scissors wins.",
                 (_, _) => "tie"
+            };
+        //Deep in pattern
+        public decimal CalculateToll(object vehicle) =>
+            vehicle switch
+            {
+                Car { Passengers: 0 } => 2.00m + 0.50m,
+                Car { Passengers: 1 } => 2.0m,
+                Car { Passengers: 2 } => 2.0m - 0.50m,
+                Car c => 2.00m - 1.0m,
+
+                Taxi { Fares: 0 } => 3.50m + 1.00m,
+                Taxi { Fares: 1 } => 3.50m,
+                Taxi { Fares: 2 } => 3.50m - 0.50m,
+                Taxi t => 3.50m - 1.00m,
+
+                Bus b when ((double)b.Riders / 10) < 0.50 => 5.00m + 2.00m,
+                Bus b when ((double)b.Riders / 10) > 0.90 => 5.00m - 1.00m,
+                Bus b => 5.00m,
+                { } => throw new ArgumentException(message: "Not a known vehicle type", paramName: nameof(vehicle)),
+                null => throw new ArgumentNullException(nameof(vehicle))
             };
     }
     public class AlreadyImplemented : IAlreadyImplemented
@@ -149,5 +176,17 @@ namespace CSharp.Library.History
         Three,
         Four,
         OnBorder
+    }
+    public class Car
+    {
+        public int Passengers { get; set; }
+    }
+    public class Taxi
+    {
+        public int Fares { get; set; }
+    }
+    public class Bus
+    {
+        public int Riders { get; set; }
     }
 }

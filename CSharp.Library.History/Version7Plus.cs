@@ -45,6 +45,18 @@ namespace CSharp.Library.History
             //Finally, a new compound access modifier: private protected indicates that a member may be accessed by containing 
             //class or derived classes that are declared in the same assembly.While protected internal allows access by derived
             //classes or classes that are in the same assembly, private protected limits access to derived types declared in the same assembly.
+            SampleForRef[] array = new SampleForRef[2] { new SampleForRef() { X = 1 }, new SampleForRef() { X = 2 } };
+            SampleForRef[] otherArray = new SampleForRef[2] { new SampleForRef() { X = 4 }, new SampleForRef() { X = 3 } };
+            ref SampleForRef r = ref (array != null ? ref array[0] : ref otherArray[0]);
+            SampleForRef withoutRef = array[0];
+            r.X = 40;
+            Console.WriteLine($"{r.X} equals {withoutRef.X} equals {array[0].X}");
+            int[] arrayInt = new int[2] { 1, 3 };
+            int[] otherArrayInt = new int[2] { 1, 3 };
+            ref int rInt = ref (arrayInt != null ? ref arrayInt[0] : ref otherArrayInt[0]);
+            int intWithoutRef = arrayInt[0];
+            rInt = 9;
+            Console.WriteLine($"{rInt} equals {arrayInt[0]} but it's not equal {intWithoutRef}");
             #endregion
             #region C# 7.3
 
@@ -83,5 +95,9 @@ namespace CSharp.Library.History
     public ref struct RefStruct
     {
         public string A { get; }
+    }
+    public class SampleForRef
+    {
+        public int X { get; set; }
     }
 }

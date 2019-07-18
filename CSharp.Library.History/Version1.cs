@@ -42,7 +42,14 @@ namespace CSharp.Library.History
             x--;
             --x;
             x += 1; // exists -= , /= , %= , *= , ^= too
-            x = checked(2147483647 + x); //check the overflow
+            try
+            {
+                x = checked(2147483647 + x); //check the overflow
+            }
+            catch (Exception er)
+            {
+                Console.WriteLine(er);
+            }
             x = unchecked(2147483647 + x); //uncheck the overflow
             checked //check the overflow in this block
             {
