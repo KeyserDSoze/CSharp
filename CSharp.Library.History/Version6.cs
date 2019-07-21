@@ -33,7 +33,7 @@ namespace CSharp.Library.History
             {
                 try
                 {
-                    Pow(2, 4);  //before you'd use Math.Pow(2, 4)
+                    Pow(2, 4);  //before you'd use Math.Pow(2, 4), see static using at top page
                     string defaultValueForNullPropagation = new B().PropertyB?[0] ?? String.Empty;  //in case of anything null set a default value "String.Empty" //Null propagator
                                                                                                     //interpolated string through special character $ at the start
                     string name = "Horace at Lab Horace";
