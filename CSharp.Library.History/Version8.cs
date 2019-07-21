@@ -272,6 +272,7 @@ namespace CSharp.Library.History
         public string PreCaring;
         public string? Caring;
         public NullableClass(string preCaring) => this.PreCaring = preCaring;
-        public int? Count => this.Caring!.Length;
+        public int? Count => this.Caring!.Length; //I' m sure that is not null and i put the ! after Caring
+        public int CountWithPossibleNullable => this.Caring.Length;
     }
 }
