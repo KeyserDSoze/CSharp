@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace CSharp.Library.History
 {
@@ -26,9 +27,18 @@ namespace CSharp.Library.History
             IAlreadyImplemented already = new AlreadyImplemented();
             if (already.IsAdded())
                 Console.WriteLine("Already implemented!!!");
+            //Using of pattern
+            PointV8 pointV8 = new PointV8() { X = 1, Y = 2, Rainbow = Rainbow.Blue };
+            Console.WriteLine($"Multiply: {Multiply(pointV8)}");
+            Console.WriteLine($"Quadrant: {GetQuadrant(pointV8)}");
+            Console.WriteLine($"Rainbow: {FromRainbow(pointV8.Rainbow)}");
+            Console.WriteLine($"Rock vs Paper wins: {RockPaperScissors(Rps.Rock, Rps.Paper)}");
+            Console.WriteLine($"Ï want to take a taxi and toll is: {CalculateToll(new Taxi())}");
             //It's disposed when it's out of scope.
             using StreamWriter streamWriter = new StreamWriter(new MemoryStream());
             streamWriter.Write("Close this stream writer at the end of this method");
+            //If I add to a ref struct the Dispose() method, i can use using statement to dispose it at the end of scope
+            using DisposableStruct disposableStruct = new DisposableStruct();
             bool isWhite = false;
             Console.WriteLine("It's not white: " + IsNotWhite(isWhite));
             //static local function
@@ -45,6 +55,21 @@ namespace CSharp.Library.History
             Console.WriteLine($"Last phrase: {string.Join(" ", lastPhrase2)}");
             Range range = ..4;
             Console.WriteLine($"First phrase: {string.Join(" ", Words[range])}");
+            //Async Stream
+            Console.WriteLine($"Total from async stream is: {ConsumeAsyncStream().ConfigureAwait(false).GetAwaiter().GetResult()}");
+            //Nullable context
+            NullableClass nullableClass = new NullableClass();
+            nullableClass.Caring = "Saturn";
+            int nullableCount = nullableClass.Count.Value;
+            Console.WriteLine($"Nullable string is length: {nullableCount}");
+        }
+        //Method that uses the async stream
+        static async Task<int> ConsumeAsyncStream()
+        {
+            int total = 0;
+            await foreach (int x in new AsynchronousStream().Fetch())
+                total += x;
+            return total;
         }
         //Property Pattern
         public static double Multiply(PointV8 pointV8)
@@ -102,15 +127,15 @@ namespace CSharp.Library.History
             };
         }
         //Tuple Patterns
-        public static string RockPaperScissors(string first, string second)
+        public static string RockPaperScissors(Rps first, Rps second)
             => (first, second) switch
             {
-                ("rock", "paper") => "rock is covered by paper. Paper wins.",
-                ("rock", "scissors") => "rock breaks scissors. Rock wins.",
-                ("paper", "rock") => "paper covers rock. Paper wins.",
-                ("paper", "scissors") => "paper is cut by scissors. Scissors wins.",
-                ("scissors", "rock") => "scissors is broken by rock. Rock wins.",
-                ("scissors", "paper") => "scissors cuts paper. Scissors wins.",
+                (Rps.Rock, Rps.Paper) => "rock is covered by paper. Paper wins.",
+                (Rps.Rock, Rps.Scissors) => "rock breaks scissors. Rock wins.",
+                (Rps.Paper, Rps.Rock) => "paper covers rock. Paper wins.",
+                (Rps.Paper, Rps.Scissors) => "paper is cut by scissors. Scissors wins.",
+                (Rps.Scissors, Rps.Rock) => "scissors is broken by rock. Rock wins.",
+                (Rps.Scissors, Rps.Paper) => "scissors cuts paper. Scissors wins.",
                 (_, _) => "tie"
             };
         //Deep in pattern
@@ -183,6 +208,13 @@ namespace CSharp.Library.History
         //Deconstruct created in c# 7+
         public void Deconstruct(out double x, out double y) => (x, y) = (X, Y);
     }
+    public ref struct DisposableStruct
+    {
+        public void Dispose()
+        {
+            Console.WriteLine("Disposable Ref Struct disposed");
+        }
+    }
     public enum Rainbow
     {
         Red,
@@ -203,6 +235,12 @@ namespace CSharp.Library.History
         Four,
         OnBorder
     }
+    public enum Rps
+    {
+        Rock,
+        Paper,
+        Scissors
+    }
     public class Car
     {
         public int Passengers { get; set; }
@@ -214,5 +252,24 @@ namespace CSharp.Library.History
     public class Bus
     {
         public int Riders { get; set; }
+    }
+    public class AsynchronousStream
+    {
+        //To understand further https://docs.microsoft.com/en-us/dotnet/csharp/tutorials/generate-consume-asynchronous-stream
+        public async IAsyncEnumerable<int> Fetch()
+        {
+            for (int i = 0; i < 20; i++)
+            {
+                await Task.Delay(100); //Simulation of a stream retrieving
+                yield return i;
+            }
+        }
+    }
+    public class NullableClass
+    {
+#nullable safeonly
+        public string? Caring;
+#nullable restore
+        public int? Count => this.Caring!.Length;
     }
 }
