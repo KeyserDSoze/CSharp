@@ -5,6 +5,7 @@ using System.Text;
 using System.IO;
 using System.Threading.Tasks;
 
+#nullable enable
 namespace CSharp.Library.History
 {
     public class Version8 : IVersion
@@ -58,9 +59,10 @@ namespace CSharp.Library.History
             //Async Stream
             Console.WriteLine($"Total from async stream is: {ConsumeAsyncStream().ConfigureAwait(false).GetAwaiter().GetResult()}");
             //Nullable context
-            NullableClass nullableClass = new NullableClass();
+            NullableClass nullableClass = new NullableClass("Root");
             nullableClass.Caring = "Saturn";
             int nullableCount = nullableClass.Count.Value;
+            int nullableCount2 = nullableClass.Count!.Value;
             Console.WriteLine($"Nullable string is length: {nullableCount}");
         }
         //Method that uses the async stream
@@ -260,16 +262,16 @@ namespace CSharp.Library.History
         {
             for (int i = 0; i < 20; i++)
             {
-                await Task.Delay(100); //Simulation of a stream retrieving
+                await Task.Delay(40); //Simulation of a stream retrieving
                 yield return i;
             }
         }
     }
     public class NullableClass
     {
-#nullable safeonly
+        public string PreCaring;
         public string? Caring;
-#nullable restore
+        public NullableClass(string preCaring) => this.PreCaring = preCaring;
         public int? Count => this.Caring!.Length;
     }
 }
