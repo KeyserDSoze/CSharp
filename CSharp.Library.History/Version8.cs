@@ -8,17 +8,43 @@ namespace CSharp.Library.History
 {
     public class Version8 : IVersion
     {
+        private string[] Words = new string[]
+        {
+                        // index from start    index from end
+            "The",      // 0                   ^9
+            "quick",    // 1                   ^8
+            "brown",    // 2                   ^7
+            "fox",      // 3                   ^6
+            "jumped",   // 4                   ^5
+            "over",     // 5                   ^4
+            "the",      // 6                   ^3
+            "lazy",     // 7                   ^2
+            "dog"       // 8                   ^1
+        };              // 9 (or words.Length) ^0
         public void Test()
         {
             IAlreadyImplemented already = new AlreadyImplemented();
             if (already.IsAdded())
                 Console.WriteLine("Already implemented!!!");
-            //It's closed when it's out of scope.
+            //It's disposed when it's out of scope.
             using StreamWriter streamWriter = new StreamWriter(new MemoryStream());
             streamWriter.Write("Close this stream writer at the end of this method");
             bool isWhite = false;
             Console.WriteLine("It's not white: " + IsNotWhite(isWhite));
+            //static local function
             static bool IsNotWhite(bool isWhite) => !isWhite;
+            Console.WriteLine($"{Words[0]} is equal to {Words[^9]}");
+            //Indices and ranges
+            string[] firstFourWords = Words[0..4]; // or [..4]
+            string[] firstFourWords2 = Words[^9..^5];
+            Console.WriteLine($"First four words: {string.Join(" ", firstFourWords)}");
+            Console.WriteLine($"First four words: {string.Join(" ", firstFourWords2)}");
+            string[] lastPhrase = Words[6..];
+            string[] lastPhrase2 = Words[^3..];
+            Console.WriteLine($"Last phrase: {string.Join(" ", lastPhrase)}");
+            Console.WriteLine($"Last phrase: {string.Join(" ", lastPhrase2)}");
+            Range range = ..4;
+            Console.WriteLine($"First phrase: {string.Join(" ", Words[range])}");
         }
         //Property Pattern
         public static double Multiply(PointV8 pointV8)
